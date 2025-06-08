@@ -5,7 +5,10 @@ The Samsung Blu-Ray player BD-C5500 contains a vulnerability in its bootloader (
 This method REQUIRES a ext3 USB, an ethernet cable and UART access
 
 -----------------------HOW-IT-WORKS-----------------------
-The BD-C5500 executes a script called rcS in /etc/init.d/ that allows for different parameters to be ran, here is an excerpt from it:
+
+The BD-C5500's Linux system executes a script called rcS located in /etc/init.d/ during boot. 
+This script interprets several boot parameters that can influence the system's behavior.
+Here is an excerpt from the original rcS script:
 <pre> ```
 #########################################################################
 

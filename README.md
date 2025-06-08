@@ -70,7 +70,8 @@ By injecting a carefully constructed payload, you can mount a USB device and exe
 4. Set your ethernet interface to a static ip with the following ip: 192.168.1.100 
 5. Run the following command:
 <pre>boot -elf -z flash0.kernel1: 'root=/dev/romblock17 console=0,115200n8 BDVD_BOOT_AUTOSTART=n BAPP_OUT=/dev/console BAPP="eval sleep 10; mount -o rw /dev/sda1 /var; cd /var; sh ./stage2.sh" memcfg=384 rw'</pre>
-6. On your computer in another terminal, run <pre>telnet 192.168.1.108</pre>
+6. On your computer in another terminal, run <pre>telnet 192.168.1.108</pre> (The telnet username is root with no password.)
+
 If mounting /dev/sda1 fails, try using /dev/sda instead.
 
 Once you’ve run the exploit once, stage2.sh will be copied to /mtd_down/homebrew on the BD-C5500's filesystem.
@@ -96,7 +97,6 @@ Baud rate: 115200 8N1
 # Notes
 The USB must be EXT3 if you want write access on it. This is especially useful for backing up your NAND with the following command : <pre>for n in `seq 0 21`; do nanddump -f mtd$n.dump /dev/mtd$n; done </pre>
 
-The telnet username is root with no password.
 # Credits
 
 Thanks to the following forum thread, without which this Proof-Of-Concept would not have been possible:  

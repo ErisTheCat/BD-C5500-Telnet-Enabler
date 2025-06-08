@@ -1,4 +1,4 @@
-# BD-C5500-Telnet-Enabler
+# TX-PWN
 BD-C5500 Bootloader vulnerability POC
 
 The Samsung Blu-Ray player BD-C5500 contains a vulnerability in its bootloader (present in the latest available firmware) that allows arbitrary code execution through the UART interface by issuing a carefully crafted boot command.
@@ -63,6 +63,24 @@ BDEVLOG_SIZE=64
 The vulnerable parameter is BAPP, which is designed to execute a single program after boot. However, this can be abused using eval to execute a chain of commands instead.
 By injecting a carefully constructed payload, you can mount a USB device and execute a script from it, effectively enabling arbitrary code execution post-boot.
 
+# How to run it
+1. Connect to the UART interface
+2. Press Ctrl+C during boot to enter the CFE console.
+3. Insert your EXT3-formatted USB drive with stage2.sh inside and connect an Ethernet cable.
+4. Set your ethernet interface to a static ip with the following ip: 192.168.1.100 
+5. Run the following command:
+<pre>boot -elf -z flash0.kernel1: 'root=/dev/romblock17 console=0,115200n8 BDVD_BOOT_AUTOSTART=n BAPP_OUT=/dev/console BAPP="eval sleep 10; mount -o rw /dev/sda1 /var; cd /var; sh ./stage2.sh" memcfg=384 rw'</pre>
+6. On your computer in another terminal, run <pre>telnet 192.168.1.108</pre>
+If mounting /dev/sda1 fails, try using /dev/sda instead.
+
+Once you’ve run the exploit once, stage2.sh will be copied to /mtd_down/homebrew on the BD-C5500's filesystem.
+For future reboots, you can launch it directly with a simpler and faster command:
+<pre>boot -elf -z flash0.kernel1: 'root=/dev/romblock17 console=0,115200n8 BDVD_BOOT_AUTOSTART=n BAPP_OUT=/dev/console BAPP="eval  cd /mtd_down/homebrew; sh ./stage2.sh" memcfg=384 rw'</pre>
+
+To gain telnet while running the main Blu-ray application, append this to the end of either command:
+<pre>cd /usr/local/bin/; ./app_player</pre>
+Be sure that you added a ; to the command before it
+
 # UART Pinout
 
 The UART interface is located at CN7 on the BD-C5500 board.
@@ -77,6 +95,8 @@ Baud rate: 115200 8N1
 
 # Notes
 The USB must be EXT3 if you want write access on it. This is especially useful for backing up your NAND with the following command : <pre>for n in `seq 0 21`; do nanddump -f mtd$n.dump /dev/mtd$n; done </pre>
+
+The telnet username is root with no password.
 # Credits
 
 Thanks to the following forum thread, without which this Proof-Of-Concept would not have been possible:  

@@ -1,5 +1,4 @@
 # TX-PWN
-BD-C5500 Bootloader vulnerability POC
 
 The Samsung Blu-Ray player BD-C5500 contains a vulnerability in its bootloader (present in the latest available firmware) that allows arbitrary code execution through the UART interface by issuing a carefully crafted boot command.
 This method REQUIRES an ext3 USB, an ethernet cable and UART access

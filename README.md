@@ -2,14 +2,14 @@
 BD-C5500 Bootloader vulnerability POC
 
 The Samsung Blu-Ray player BD-C5500 contains a vulnerability in its bootloader (present in the latest available firmware) that allows arbitrary code execution through the UART interface by issuing a carefully crafted boot command.
-This method REQUIRES a ext3 USB, an ethernet cable and UART access
+This method REQUIRES an ext3 USB, an ethernet cable and UART access
 
 # How it works
 
 The BD-C5500's Linux system executes a script called rcS located in /etc/init.d/ during boot. 
 This script interprets several boot parameters that can influence the system's behavior.
 Here is an excerpt from the original rcS script:
-<pre> ```
+<pre>
 #########################################################################
 
 
@@ -59,6 +59,26 @@ BTMPFS_SIZE=640
 # deal less than BTMPFS_SIZE.
 BDEVLOG_SIZE=64
 ####^^^^####^^^^####
-``` </pre>
+</pre>
 The vulnerable parameter is BAPP, which is designed to execute a single program after boot. However, this can be abused using eval to execute a chain of commands instead.
 By injecting a carefully constructed payload, you can mount a USB device and execute a script from it, effectively enabling arbitrary code execution post-boot.
+
+# UART Pinout
+
+The UART interface is located at CN7 on the BD-C5500 board.
+
+* Pin 1 – TX
+
+* Pin 2 – RX
+
+* Pin 14 – GND
+
+Baud rate: 115200 8N1
+
+# Notes
+The USB must be EXT3 if you want write access on it. This is especially useful for backing up your NAND with the following command : <pre>for n in `seq 0 21`; do nanddump -f mtd$n.dump /dev/mtd$n; done </pre>
+# Credits
+
+Thanks to the following forum thread, without which this Proof-Of-Concept would not have been possible:  
+[https://forum.samygo.tv/viewtopic.php?t=1156&sid=b52e08820181a968ddbdb7bedea5964f](https://forum.samygo.tv/viewtopic.php?t=1156&sid=b52e08820181a968ddbdb7bedea5964f)
+

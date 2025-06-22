@@ -98,6 +98,7 @@ The USB must be EXT3 if you want write access on it. This is especially useful f
 
 # Credits
 
-Thanks to the following forum thread, without which this Proof-Of-Concept would not have been possible:  
+Thanks to the following forum thread and website, without which this Proof-Of-Concept would not have been possible:  
 [https://forum.samygo.tv/viewtopic.php?t=1156&sid=b52e08820181a968ddbdb7bedea5964f](https://forum.samygo.tv/viewtopic.php?t=1156&sid=b52e08820181a968ddbdb7bedea5964f)
+[https://vea.st/](https://vea.st/)
 
